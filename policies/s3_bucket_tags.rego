@@ -4,7 +4,7 @@ package policies
 
 default allow = false
 
-allow if
+s3_bucket_tags_allowed if
     input.resource.type == "aws_s3_bucket"
     input.resource.tags["owner"] != ""
     input.resource.tags["environment"] != ""
