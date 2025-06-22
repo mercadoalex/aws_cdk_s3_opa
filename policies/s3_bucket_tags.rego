@@ -2,19 +2,16 @@ package policies
 
 # This policy enforces that all S3 buckets must have the required tags: "owner" and "environment".
 
-# Define the main rule for S3 bucket tagging
+# By default, deny unless explicitly allowed
 default allow = false
 
-# Allow if the bucket has both required tags
-allow {
+# Allow if the resource is an S3 bucket and both required tags are present and non-empty
+allow if
     input.resource.type == "aws_s3_bucket"
     input.resource.tags["owner"] != ""
     input.resource.tags["environment"] != ""
-}
 
-# Define the input structure expected by the policy
-# input.resource should contain the resource details including type and tags
-# Example input structure:
+# Input structure expected by this policy:
 # {
 #   "resource": {
 #     "type": "aws_s3_bucket",
