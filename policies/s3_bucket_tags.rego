@@ -6,18 +6,19 @@ package policies
 default allow = false
 
 # Allow if the resource is an S3 bucket and both required tags are present and non-empty
-allow if
+allow {
     input.resource.type == "aws_s3_bucket"
     input.resource.tags["owner"] != ""
     input.resource.tags["environment"] != ""
+}
 
 # Input structure expected by this policy:
 # {
 #   "resource": {
 #     "type": "aws_s3_bucket",
 #     "tags": {
-#       "owner": "example-owner",
-#       "environment": "production"
+#       "owner": "Alex",
+#       "environment": "development"
 #     }
 #   }
 # }
