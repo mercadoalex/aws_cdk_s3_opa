@@ -49,5 +49,5 @@ jobs:
         run: |
           for policy in ./policies/*.rego; do
             echo "Testing policy: $policy"
-            opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.allow"
+            opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.s3_bucket_tags_allowed"
           done
