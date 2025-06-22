@@ -56,7 +56,7 @@ jobs:
             echo "----- Policy Content -----"
             cat "$policy"
             echo "----- OPA Output -----"
-            opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.s3_bucket_tag_violation_msgs"
+            opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.s3_bucket_tag_violation"
             if [ $? -ne 0 ]; then
               echo "Policy $policy failed. Exiting."
               exit 1
