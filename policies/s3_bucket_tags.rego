@@ -5,14 +5,14 @@ package policies
 # Compatible with OPA v1.5.1+ (uses new-style partial set rule syntax).
 
 # Violation if an S3 bucket is missing the "owner" tag
-s3_bucket_tag_violation_msgs[msg] contains msg if
+s3_bucket_tag_violation_msgs[msg] if
     some i
     input[i].resource.type == "aws_s3_bucket"
     input[i].resource.tags.owner == undefined
     msg := sprintf("S3 bucket missing 'owner' tag: %v", [input[i].resource])
 
 # Violation if an S3 bucket is missing the "environment" tag
-s3_bucket_tag_violation_msgs[msg] contains msg if
+s3_bucket_tag_violation_msgs[msg] if
     some i
     input[i].resource.type == "aws_s3_bucket"
     input[i].resource.tags.environment == undefined
