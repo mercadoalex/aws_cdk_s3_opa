@@ -43,8 +43,7 @@ jobs:
 
       # Step 7: Convert the synthesized CloudFormation template to OPA input format
       - name: Convert CloudFormation to OPA input (S3 buckets only)
-        run: python3 .github/scripts/cfn_to_opa_input.py cdk.out/template.yaml opa_input.json
-
+        run: python3 scripts/cfn_to_opa_input.py cdk.out/template.yaml opa_input.json
       # Step 8: Run all OPA policies in the 'policies' folder against the input
       - name: Run all OPA policies in 'policies' folder
         run: |
