@@ -47,15 +47,18 @@ jobs:
       - name: Convert CloudFormation to OPA input (S3 buckets only)
         run: python3 scripts/cfn_to_opa_input.py cdk.out/template.yaml opa_input.json
 
-      # Step 8: Run all OPA policies in the 'policies' folder against the input
-      # This will fail the workflow if any deny messages are returned by the policy
-      - name: Run all OPA policies in 'policies' folder
+      # Step 8: Run all OPA policies in the 'policies' folder against the input with debug output
+      - name: Run all OPA policies in 'policies' folder (with debug output)
         run: |
           for policy in ./policies/*.rego; do
+            echo "=============================="
             echo "Testing policy: $policy"
+            echo "----- Policy Content -----"
+            cat "$policy"
+            echo "----- OPA Output -----"
             opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.s3_bucket_tag_violation_msgs"
             if [ $? -ne 0 ]; then
               echo "Policy $policy failed. Exiting."
               exit 1
-            fi  
+            fi
           done

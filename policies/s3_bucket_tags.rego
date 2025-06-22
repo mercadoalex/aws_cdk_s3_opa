@@ -1,17 +1,18 @@
 package policies
 
 # This policy enforces that all S3 buckets must have the required tags: "owner" and "environment".
-# It is designed to work with an array of resources as input.
+# It is designed to work with an array of resources as input (as produced by your conversion script).
+# Compatible with OPA v1.5.1+ (uses new-style partial set rule syntax).
 
 # Violation if an S3 bucket is missing the "owner" tag
-s3_bucket_tag_violation_msgs[msg] if
+s3_bucket_tag_violation_msgs[msg] contains msg if
     some i
     input[i].resource.type == "aws_s3_bucket"
     input[i].resource.tags.owner == undefined
     msg := sprintf("S3 bucket missing 'owner' tag: %v", [input[i].resource])
 
 # Violation if an S3 bucket is missing the "environment" tag
-s3_bucket_tag_violation_msgs[msg] if
+s3_bucket_tag_violation_msgs[msg] contains msg if
     some i
     input[i].resource.type == "aws_s3_bucket"
     input[i].resource.tags.environment == undefined
