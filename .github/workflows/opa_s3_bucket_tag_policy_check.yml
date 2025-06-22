@@ -40,6 +40,8 @@ jobs:
           wget https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
           chmod +x opa_linux_amd64_static
           sudo mv opa_linux_amd64_static /usr/local/bin/opa
+          echo "OPA version (must be v0.63.0+):"
+          opa version
 
       # Step 7: Convert the synthesized CloudFormation template to OPA input format
       - name: Convert CloudFormation to OPA input (S3 buckets only)
