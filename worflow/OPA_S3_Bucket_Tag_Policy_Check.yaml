@@ -1,0 +1,49 @@
+name: OPA S3 Bucket Tag Policy Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd aws_cdk_s3_opa
+          npm install
+
+      - name: Synthesize CloudFormation template
+        run: |
+          cd aws_cdk_s3_opa
+          npx cdk synth > cdk.out/template.yaml
+
+      - name: Install OPA CLI
+        run: |
+          wget https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
+          chmod +x opa_linux_amd64_static
+          sudo mv opa_linux_amd64_static /usr/local/bin/opa
+
+      - name: Convert CloudFormation to OPA input (S3 buckets only)
+        run: |
+          cd aws_cdk_s3_opa
+          python3 ../.github/scripts/cfn_to_opa_input.py cdk.out/template.yaml opa_input.json
+
+      - name: Run all OPA policies in 'policies' folder
+        run: |
+          cd aws_cdk_s3_opa
+          for policy in ./policies/*.rego; do
+            echo "Testing policy: $policy"
+            opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.allow"
+          done
