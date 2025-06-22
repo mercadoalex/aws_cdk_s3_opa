@@ -7,14 +7,14 @@ package policies
 deny[msg] contains msg if
     some i
     input[i].resource.type == "aws_s3_bucket"
-    not input[i].resource.tags.owner
+    not input[i].resource.tags["owner"]
     msg := sprintf("S3 bucket missing 'owner' tag: %v", [input[i].resource])
 
 # Deny if an S3 bucket is missing the "environment" tag
 deny[msg] contains msg if
     some i
     input[i].resource.type == "aws_s3_bucket"
-    not input[i].resource.tags.environment
+    not input[i].resource.tags["environment"]
     msg := sprintf("S3 bucket missing 'environment' tag: %v", [input[i].resource])
 
 # Example input structure expected by this policy:
