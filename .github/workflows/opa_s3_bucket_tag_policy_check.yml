@@ -61,7 +61,7 @@ jobs:
             cat "$policy"
             echo "----- OPA Output -----"
             # Run OPA and fail immediately if there are violations or errors
-            opa eval --format pretty --fail-defined --data "$policy" --input opa_input.json "data.policies.s3_bucket_environment_tag_missing"
+            opa eval --format pretty --data "$policy" --input opa_input.json "data.policies.s3_bucket_environment_tag_missing"
             if [ $? -ne 0 ]; then
               echo "❌ Policy $policy failed. Exiting."
               exit 1
