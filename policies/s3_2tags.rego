@@ -1,0 +1,29 @@
+package policies
+
+# This policy enforces that all AWS S3 buckets must have BOTH "environment" and "owner" tags.
+# It works with an array of resources as input.
+
+# Violation if an S3 bucket is missing either the "owner" or "environment" tag
+s3_bucket_mandatory_tags_violations[msg] if
+    some i
+    input[i].resource.type == "aws_s3_bucket"
+    (
+        input[i].resource.tags.owner == undefined
+        msg := sprintf("S3 bucket missing 'owner' tag: %v", [input[i].resource])
+    ) else (
+        input[i].resource.tags.environment == undefined
+        msg := sprintf("S3 bucket missing 'environment' tag: %v", [input[i].resource])
+    )
+
+# Example input structure expected by this policy:
+# [
+#   {
+#     "resource": {
+#       "type": "aws_s3_bucket",
+#       "tags": {
+#         "owner": "Alex",
+#         "environment": "development"
+#       }
+#     }
+#   }
+# ]
