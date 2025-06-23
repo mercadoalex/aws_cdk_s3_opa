@@ -5,7 +5,7 @@ node_modules
 
 # Ignore .rego files in the policies directory
 policies/s3_bucket_tags.rego
-policies/s3_2tags.rego
+policies/minimal.rego
 
 # CDK asset staging directory
 .cdk.staging
