@@ -5,6 +5,6 @@ package policies
 s3_bucket_environment_tag_missing = {msg |
     some i
     input[i].resource.type == "aws_s3_bucket"
-    input[i].resource.tags.environment == undefined
+    not input[i].resource.tags.environment
     msg := sprintf("S3 bucket missing 'environment' tag: %v", [input[i].resource])
 }
