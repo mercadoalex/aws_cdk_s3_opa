@@ -33,11 +33,8 @@ jobs:
       # Step 5: Synthesize the CloudFormation template from CDK
       - name: Synthesize CloudFormation template
         run: npx cdk synth > cdk.out/template.yaml
-      # Step 6: Print the content of the synthesized template for debugging
-      - name: Print OPA input for debugging
-        run: cat opa_input.json  
 
-      # Step 7: Install OPA CLI for policy evaluation
+      # Step 6: Install OPA CLI for policy evaluation
       - name: Install OPA CLI
         run: |
           wget https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
@@ -46,9 +43,13 @@ jobs:
           echo "OPA version should be at least v1.5.1"
           opa version
 
-      # Step 8: Convert the synthesized CloudFormation template to OPA input format
+      # Step 7: Convert the synthesized CloudFormation template to OPA input format
       - name: Convert CloudFormation to OPA input (S3 buckets only)
         run: python3 scripts/cfn_to_opa_input.py cdk.out/template.yaml opa_input.json
+      
+       # Step 8: Print the content of the synthesized template for debugging
+      - name: Print OPA input for debugging
+        run: cat opa_input.json    
 
       # Step 9: Run all OPA policies in the 'policies' folder against the input with debug output
       - name: Run all OPA policies in 'policies' folder (with debug output)
